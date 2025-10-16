@@ -16,7 +16,7 @@ log = logging.getLogger('aiopolly')
 class BasePollyObject(BaseModel):
     class Config:
         arbitrary_types_allowed = True
-        extra = Extra.allow
+        extra = 'allow'
         validate_assignment = True
         allow_population_by_alias = True
         alias_generator = to_camel
