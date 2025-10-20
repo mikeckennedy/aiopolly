@@ -3,7 +3,7 @@ Based on: https://github.com/MrMrRobat/AnyStrEnum
 """
 
 import sys
-from enum import Enum, EnumMeta, _EnumDict, auto
+from enum import Enum, EnumMeta, auto, EnumDict
 from types import FunctionType
 from typing import List, Callable, AnyStr, Set, TypeVar, Type, Any
 
@@ -12,6 +12,7 @@ CONVERTER_ATTR = "__converter__"
 
 TYPE_BLACKLIST = FunctionType, property, type, classmethod, staticmethod
 
+EnumDict._cls_name = 'StrEnumDict'
 
 class StrItem:
     __slots__ = 'sep', 'converter'
@@ -119,7 +120,7 @@ class StrEnumMeta(EnumMeta):
             converter = class_dict.get(CONVERTER_ATTR) or base_enum.__converter__
 
         item = StrItem(sep=sep, converter=converter)
-        new_class_dict = _EnumDict()
+        new_class_dict = EnumDict()
         for name, type_hint in class_dict.get('__annotations__', {}).items():
             if name.startswith('_') or name in class_dict:
                 continue

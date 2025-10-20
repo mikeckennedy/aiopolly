@@ -3,7 +3,7 @@ import re
 from typing import List, Tuple, Union, Dict
 from urllib.parse import urlencode
 
-from pydantic import validator
+from pydantic import validator, field_validator
 
 from .base import BasePollyObject
 from .params import ContentType
@@ -13,7 +13,7 @@ __all__ = ['Method']
 
 
 class Method(BasePollyObject):
-    request_method: str
+    request_method: str = None
     name: str = None
     endpoint: str = None
     endpoint_template: str = None
@@ -91,7 +91,7 @@ class Method(BasePollyObject):
             except (KeyError, TypeError):
                 raise e
 
-    @validator('expected_keys', whole=True)
+    @field_validator('expected_keys')
     def _make_keys_dict(cls, keys) -> dict:
         if isinstance(keys, str):
             return {f'{string_to_snake(keys)}_key': keys}
@@ -99,7 +99,7 @@ class Method(BasePollyObject):
             return to_snake(keys)
         return {f'{string_to_snake(k)}_key': k for k in keys}
 
-    @validator('expected_content_types', whole=True)
+    @field_validator('expected_content_types')
     def _make_tuple_from_content_types(cls, content_types):
         if isinstance(content_types, (ContentType, str)):
             return content_types,
